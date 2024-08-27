@@ -1,0 +1,33 @@
+image: atlassian/default-image:2
+
+pipelines:
+  master:
+    - step:
+        name: Build and Test Docker image
+        caches:
+          - docker
+        services:
+          - docker
+        script:
+          - echo "Building the Docker image..."
+          - docker build -t php-docker-app .
+          - docker build -t php-docker-app-web
+          - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          # Push the Docker images to the registry
+          - docker push dhanshree111/phpweb:001
+
+
+    - step:
+        name: Push Docker Image to Registry
+        services:
+          - docker
+        deployment: production
+        script:
+          # Log in to Docker Hub
+          - echo "Building the Docker image..."
+          # Push the Docker images to the registry
+          - docker push dhanshree111/phpweb:001
+definitions:
+  services:
+    docker:
+      image: docker:19.03.12
