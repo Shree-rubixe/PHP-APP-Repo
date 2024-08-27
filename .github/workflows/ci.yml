@@ -43,7 +43,7 @@ jobs:
           username: ${{ secrets.PRODUCTION_SERVER_USER }}
           key: ${{ secrets.PRODUCTION_SERVER_SSH_KEY }}
           script: |
-            cd /path/to/your/app
+            cd /var/www/my-app
             git pull origin main
             docker-compose down
             docker-compose up -d --build
