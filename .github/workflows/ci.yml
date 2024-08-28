@@ -1,4 +1,3 @@
----
 name: PHP CI/CD Pipeline
 on:
   push:
@@ -10,22 +9,30 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Build and tag Docker image
         run: |
-          docker build -t phpweb:002
+          # Build the Docker image with the correct build context (the current directory).
+          docker build -t phpweb:002 .
+          # Tag the image with the repository name.
           docker tag phpweb:002 dhanshree111/phpweb:002
+
       - name: Verify image is built locally
         run: docker images
+
       - name: Push Docker image to Docker Hub
         run: |
           docker push dhanshree111/phpweb:002
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -61,3 +68,4 @@ jobs:
 
             echo "Checking for exited or dead containers..."
             docker ps -a --filter "status=exited" --filter "status=dead"
+
