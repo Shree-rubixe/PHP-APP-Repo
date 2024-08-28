@@ -6,6 +6,11 @@ services:
       - "8080:80"
     volumes:
       - ./src:/var/www/html
+  phpweb:
+    image: dhanshree111/phpweb:001
+    ports:
+      - "8081:80"
+
   db:
     image: mysql:5.7
     environment:
