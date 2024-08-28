@@ -19,13 +19,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build and tag Docker image
         run: |
-          docker build -t php-docker-app .
-          docker tag php-docker-app dhanshree111/php-docker-app:002
+          docker build -t phpweb:002
+          docker tag phpweb:002 dhanshree111/phpweb:002
       - name: Verify image is built locally
         run: docker images
       - name: Push Docker image to Docker Hub
         run: |
-          docker push dhanshree111/php-docker-app:002
+          docker push dhanshree111/phpweb:002
   deploy:
     runs-on: ubuntu-latest
     needs: build

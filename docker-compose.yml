@@ -6,8 +6,9 @@ services:
       - "8080:80"
     volumes:
       - ./src:/var/www/html
+
   phpweb:
-    image: dhanshree111/phpweb:001
+    image: dhanshree111/phpweb:002
     ports:
       - "8081:80"
 
@@ -16,3 +17,4 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: localhost
+
