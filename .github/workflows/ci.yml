@@ -24,42 +24,36 @@ jobs:
 
       - name: Build and tag Docker image
         run: |
-          docker buildx build --platform linux/amd64 -t dhanshree111/php-docker-app:latest .
+          docker build -t php-docker-app .
+          docker tag php-docker-app dhanshree111/php-docker-app:latest
+
+      - name: Verify image is built locally
+        run: docker images
 
       - name: Push Docker image to Docker Hub
         run: |
           docker push dhanshree111/php-docker-app:latest
 
   deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: SSH to Production Server and Enable Paramiko
+     runs-on: ubuntu-latest
+     needs: build
+     steps:
+       - name: SSH to Production Server and Enable Paramiko
         uses: appleboy/ssh-action@v0.1.3
         with:
           host: ${{ secrets.PRODUCTION_SERVER_IP }}
           username: ${{ secrets.PRODUCTION_SERVER_USER }}
           key: ${{ secrets.PRODUCTION_SERVER_SSH_KEY }}
-          use_insecure_cipher: true # Optional: Sometimes needed for certain cipher issues
+          use_insecure_cipher: true
           script: |
-            # Enable Paramiko explicitly
             docker_client:
               use_ssh_client: true
             
-            # Debugging: Check Docker and Docker Compose Versions
             docker --version
             docker-compose --version
 
-            # Navigate to app directory and deploy
             cd /var/www/my-app
             docker-compose down
             docker-compose pull
             docker-compose up -d --build
-
-      - name: Docker Client Check
-        run: |
-          echo "Checking if the Docker client is installed and functional"
-          docker --version
-          docker-compose --version
 
